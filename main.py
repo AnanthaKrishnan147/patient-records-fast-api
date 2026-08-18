@@ -1,4 +1,4 @@
-from fastapi import FastAPI , Path # we just import the class fastapi 
+from fastapi import FastAPI , Path , HTTPException # we just import the class fastapi 
 import json
 
 app = FastAPI()   # create an object of class fastapi 
@@ -23,8 +23,12 @@ def view():
     return data 
 
 @app.get("/patient/{patient_id}")
-def view_patient(patient_id : str):
+def view_patient(patient_id : str = Path(... , description = "the details of the patient from the given id" , example = "P001")):
     data = load_data()
     if patient_id in data:
         return data[patient_id]
-    return {'error':'patient is not found motherfucker'}
+    raise HTTPException(
+        status_code = 404 ,
+        detail = "Patient not found"
+    )
+
